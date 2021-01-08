@@ -3,7 +3,11 @@ from django.http import HttpResponse, Http404
 import datetime as dt
 from .models import Article
 
-# Create your views here.
+
+# Create your views here
+def welcome(request):
+    return render(request, 'welcome.html')
+    
 def news_today(request):
     date = dt.date.today()
     news = Article.todays_news()
