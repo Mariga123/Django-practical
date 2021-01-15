@@ -1,11 +1,16 @@
 asgiref==3.3.1
 beautifulsoup4==4.9.3
+confusable-homoglyphs==3.2.0
 Django==3.1.5
 django-bootstrap4==2.3.1
+django-cors-headers==3.6.0
+django-registration==2.4.1
 importlib-metadata==2.1.1
 Pillow==8.1.0
 psycopg2-binary==2.8.6
+python-decouple==3.4
 pytz==2020.5
+six==1.15.0
 soupsieve==2.1
 sqlparse==0.4.1
 zipp==3.4.0
