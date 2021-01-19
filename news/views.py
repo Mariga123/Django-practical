@@ -5,6 +5,13 @@ from .models import Article,NewsLetterRecipients
 from .forms import NewArticleForm, NewsLetterForm
 from .email import send_welcome_email
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import  MoringaMerch
+from .serializer import MerchSerializer
+
+
 
 
 
@@ -13,22 +20,39 @@ from django.contrib.auth.decorators import login_required
 def welcome(request):
     return render(request, 'welcome.html')
     
+# def news_today(request):
+#     date = dt.date.today()
+#     news = Article.todays_news()
+#     form = NewsLetterForm()
+#     if request.method == 'POST':
+#         form = NewsLetterForm(request.POST)
+#         if form.is_valid():
+#             name = form.cleaned_data['your_name']
+#             email = form.cleaned_data['email']
+
+#             recipient = NewsLetterRecipients(name = name,email =email)
+#             recipient.save()
+#             send_welcome_email(name,email)
+#             HttpResponseRedirect('news_today')
+#     else:
+#         form = NewsLetterForm()
+#     return render(request, 'all-news/today-news.html', {"date": date,"news":news,"letterForm":form})
+
 def news_today(request):
     date = dt.date.today()
     news = Article.todays_news()
-    if request.method == 'POST':
-        form = NewsLetterForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['your_name']
-            email = form.cleaned_data['email']
+    form = NewsLetterForm()
+    return render(request, 'all-news/today-news.html', {"date": date, "news": news, "letterForm": form})
 
-            recipient = NewsLetterRecipients(name = name,email =email)
-            recipient.save()
-            send_welcome_email(name,email)
-            HttpResponseRedirect('news_today')
-    else:
-        form = NewsLetterForm()
-    return render(request, 'all-news/today-news.html', {"date": date,"news":news,"letterForm":form})
+def newsletter(request):
+    name = request.POST.get('your_name')
+    email = request.POST.get('email')
+
+    recipient = NewsLetterRecipients(name=name, email=email)
+    recipient.save()
+    send_welcome_email(name, email)
+    data = {'success': 'You have been successfully added to mailing list'}
+    return JsonResponse(data)
 
 def past_days_news(request,past_date):
     
@@ -78,8 +102,14 @@ def new_article(request):
             article = form.save(commit=False)
             article.editor = current_user
             article.save()
-        return redirect('NewsToday')
+        return redirect(News_Today)
 
     else:
         form = NewArticleForm()
     return render(request, 'new_article.html', {"form": form})
+
+class MerchList(APIView):
+    def get(self, request, format=None):
+        all_merch = MoringaMerch.objects.all()
+        serializers = MerchSerializer(all_merch, many=True)
+        return Response(serializers.data)
