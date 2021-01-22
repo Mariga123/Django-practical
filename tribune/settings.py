@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'tinymce',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,14 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'tribune.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
